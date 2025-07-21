@@ -25,11 +25,13 @@
     "@rocketseat/eslint-config": "2.2.2",
     "@types/node": "24.0.15",
     "eslint": "8.57.1",
+    "prisma": "6.12.0",
     "tsup": "8.5.0",
     "tsx": "4.20.3",
     "typescript": "5.8.3"
   },
   "dependencies": {
+    "@prisma/client": "6.12.0",
     "dotenv": "17.2.0",
     "fastify": "5.4.0",
     "zod": "4.0.5"
