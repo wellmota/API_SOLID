@@ -4,8 +4,8 @@
   "description": "GymPass style app.",
   "main": "index.js",
   "scripts": {
-    "test": "vitest",
-    "test:run": "vitest run",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "start": "node build/server.js",
     "start:dev": "tsx watch src/server.ts",
