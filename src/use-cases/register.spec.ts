@@ -33,9 +33,9 @@ describe("Register Use Case", () => {
 
     const { user } = await registerUseCase.execute(userData);
 
-    expect(user.password_hash).toBeDefined();
-    expect(user.password_hash).not.toBe(userData.password); // Password should be hashed
-    expect(user.password_hash).toHaveLength(60); // bcrypt hash length
+    await expect(user.password_hash).toBeDefined();
+    await expect(user.password_hash).not.toBe(userData.password); // Password should be hashed
+    await expect(user.password_hash).toHaveLength(60); // bcrypt hash length
 
     const isPasswordCorrectlyHashed = await compare(
       "123456",
@@ -44,7 +44,7 @@ describe("Register Use Case", () => {
 
     console.log(user.password_hash);
 
-    expect(isPasswordCorrectlyHashed).toBe(true);
+    await  expect(isPasswordCorrectlyHashed).toBe(true);
   });
 
   it("should throw error if email already exists", async () => {
