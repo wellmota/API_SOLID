@@ -15,17 +15,4 @@ export abstract class BaseUseCaseFactory {
         throw new Error(`Unsupported repository type: ${type}`)
     }
   }
-
-  protected createRepositoryWithType<T extends UsersRepository>(
-    type: RepositoryType,
-    repositoryClass: new () => T
-  ): T {
-    if (type === 'in-memory' && repositoryClass === InMemoryUsersRepository) {
-      return new InMemoryUsersRepository()
-    }
-    if (type === 'prisma' && repositoryClass === PrismaUsersRepository) {
-      return new PrismaUsersRepository()
-    }
-    throw new Error(`Repository type ${type} does not match repository class`)
-  }
 }

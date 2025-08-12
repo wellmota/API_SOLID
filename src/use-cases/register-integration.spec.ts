@@ -51,7 +51,7 @@ describe('Register Integration', () => {
 
     // Second registration with same email should fail
     await expect(registerUseCase.execute(userData)).rejects.toBeInstanceOf(
-      UserAlreadyExistsError,
+      UserAlreadyExistsError
     )
   })
 

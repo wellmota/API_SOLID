@@ -9,16 +9,22 @@ The factory pattern provides a clean way to instantiate use cases with the appro
 ## Available Factories
 
 ### 1. RegisterUseCaseFactory
+
 Creates instances of `RegisterUseCase` with different repository implementations.
 
 ### 2. AuthenticateUseCaseFactory
+
 Creates instances of `AuthenticateUseCase` with different repository implementations.
 
 ## Usage Examples
 
 ### In Controllers (Production)
+
 ```typescript
-import { makeRegisterUseCase, makeAuthenticateUseCase } from '@/use-cases/factories'
+import {
+  makeRegisterUseCase,
+  makeAuthenticateUseCase,
+} from '@/use-cases/factories'
 
 // Use Prisma repository (default)
 const registerUseCase = makeRegisterUseCase('prisma')
@@ -30,8 +36,12 @@ const authenticateUseCase = makeAuthenticateUseCase('prisma')
 ```
 
 ### In Tests
+
 ```typescript
-import { makeRegisterUseCase, makeAuthenticateUseCase } from '@/use-cases/factories'
+import {
+  makeRegisterUseCase,
+  makeAuthenticateUseCase,
+} from '@/use-cases/factories'
 
 // Use in-memory repository for testing
 const registerUseCase = makeRegisterUseCase('in-memory')
@@ -39,8 +49,12 @@ const authenticateUseCase = makeAuthenticateUseCase('in-memory')
 ```
 
 ### Using Factory Classes Directly
+
 ```typescript
-import { RegisterUseCaseFactory, AuthenticateUseCaseFactory } from '@/use-cases/factories'
+import {
+  RegisterUseCaseFactory,
+  AuthenticateUseCaseFactory,
+} from '@/use-cases/factories'
 
 const registerFactory = new RegisterUseCaseFactory()
 const authenticateFactory = new AuthenticateUseCaseFactory()
@@ -72,6 +86,7 @@ To add a new use case factory:
 4. Update the index file
 
 Example:
+
 ```typescript
 export class NewUseCaseFactory extends BaseUseCaseFactory {
   create(type: RepositoryType = 'prisma'): NewUseCase {
