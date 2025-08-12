@@ -1,19 +1,12 @@
-import { expect, describe, it, beforeEach } from 'vitest'
-import { RegisterUseCase } from './register'
-import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
+import { expect, describe, it } from 'vitest'
+import { makeRegisterUseCase } from './factories'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 import { compare } from 'bcryptjs'
 
 describe('Register Integration', () => {
-  let registerUseCase: RegisterUseCase
-  let usersRepository: InMemoryUsersRepository
-
-  beforeEach(() => {
-    usersRepository = new InMemoryUsersRepository()
-    registerUseCase = new RegisterUseCase(usersRepository)
-  })
-
   it('should register multiple users successfully', async () => {
+    const registerUseCase = makeRegisterUseCase('in-memory')
+
     const user1Data = {
       name: 'John Doe',
       email: 'john.doe@example.com',
@@ -45,6 +38,8 @@ describe('Register Integration', () => {
   })
 
   it('should throw error when trying to register same email twice', async () => {
+    const registerUseCase = makeRegisterUseCase('in-memory')
+
     const userData = {
       name: 'John Doe',
       email: 'john.doe@example.com',
@@ -56,11 +51,13 @@ describe('Register Integration', () => {
 
     // Second registration with same email should fail
     await expect(registerUseCase.execute(userData)).rejects.toBeInstanceOf(
-      UserAlreadyExistsError
+      UserAlreadyExistsError,
     )
   })
 
   it('should handle edge case with empty password', async () => {
+    const registerUseCase = makeRegisterUseCase('in-memory')
+
     const userData = {
       name: 'John Doe',
       email: 'john.doe@example.com',
@@ -74,6 +71,8 @@ describe('Register Integration', () => {
   })
 
   it('should handle edge case with very long password', async () => {
+    const registerUseCase = makeRegisterUseCase('in-memory')
+
     const longPassword = 'a'.repeat(1000)
     const userData = {
       name: 'John Doe',
@@ -91,6 +90,8 @@ describe('Register Integration', () => {
   })
 
   it('should handle special characters in name and email', async () => {
+    const registerUseCase = makeRegisterUseCase('in-memory')
+
     const userData = {
       name: 'João Silva & Co.',
       email: 'joão.silva+test@example.com',

@@ -1,30 +1,12 @@
-import { expect, describe, it, beforeEach } from "vitest";
+import { expect, describe, it } from "vitest";
 import { compare } from "bcryptjs";
-import { RegisterUseCase } from "./register";
+import { makeRegisterUseCase } from "./factories";
 import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
-import { UsersRepository } from "@/repositories/users-repository";
 
 describe("Register Use Case", () => {
-  let registerUseCase: RegisterUseCase;
-  let mockUsersRepository: UsersRepository;
-
-  beforeEach(() => {
-    // Create a simple mock repository
-    mockUsersRepository = {
-      findByEmail: async () => null, // Default: no user exists
-      create: async (data) => ({
-        id: "user-1",
-        name: data.name,
-        email: data.email,
-        password_hash: data.password_hash || "",
-        createdAt: new Date(),
-      }),
-    };
-
-    registerUseCase = new RegisterUseCase(mockUsersRepository);
-  });
-
   it("should hash user password upon registration", async () => {
+    const registerUseCase = makeRegisterUseCase('in-memory');
+    
     const userData = {
       name: "John Doe",
       email: "john.doe@example.com",
@@ -48,21 +30,18 @@ describe("Register Use Case", () => {
   });
 
   it("should throw error if email already exists", async () => {
-    // Override the mock to simulate existing user
-    mockUsersRepository.findByEmail = async () => ({
-      id: "existing-user-1",
-      name: "Existing User",
-      email: "john.doe@example.com",
-      password_hash: "existing_hash",
-      createdAt: new Date(),
-    });
-
+    const registerUseCase = makeRegisterUseCase('in-memory');
+    
     const userData = {
       name: "John Doe",
       email: "john.doe@example.com",
       password: "123456",
     };
 
+    // First registration should succeed
+    await registerUseCase.execute(userData);
+
+    // Second registration with same email should fail
     await expect(registerUseCase.execute(userData)).rejects.toBeInstanceOf(
       UserAlreadyExistsError,
     );
