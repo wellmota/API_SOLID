@@ -1,6 +1,6 @@
-import { UsersRepository } from '@/repositories/users-repository'
-import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository'
-import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
+import { UsersRepository } from '../../repositories/users-repository'
+import { PrismaUsersRepository } from '../../repositories/prisma/prisma-users-repository'
+import { InMemoryUsersRepository } from '../../repositories/in-memory/in-memory-users-repository'
 
 export type RepositoryType = 'prisma' | 'in-memory'
 
