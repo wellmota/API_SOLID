@@ -5,7 +5,7 @@ GymPass style app.
 ## FRs (Functional Requirements)
 
 - [x] It should be possible to register;
-- [ ] It should be possible to authenticate;
+- [x] It should be possible to authenticate;
 - [ ] It should be possible to get the profile of a logged-in user;
 - [ ] It should be possible to get the number of check-ins made by the logged-in user;
 - [ ] Users should be able to get their check-in history;
@@ -27,7 +27,7 @@ GymPass style app.
 ## RNF's (Requisitos não-funcionais)
 
 - [x] User password must be encryted
-- [ ] Data must be persist into a PostgreSQL
+- [x] Data must be persist into a PostgreSQL
 - [ ] All lists must be paginated with 20 items per page
 - [ ] User must be identified by a JWT (JSON Web Token)
 
