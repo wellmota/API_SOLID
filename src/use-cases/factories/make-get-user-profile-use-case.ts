@@ -4,7 +4,7 @@ import { UsersRepository } from '@/repositories/users-repository'
 
 export class GetUserProfileUseCaseFactory extends BaseUseCaseFactory {
   create(type: RepositoryType = 'prisma'): GetUserProfileUseCase {
-    const usersRepository = this.createRepository(type)
+    const usersRepository = this.createUsersRepository(type)
     return new GetUserProfileUseCase(usersRepository)
   }
 
@@ -14,14 +14,14 @@ export class GetUserProfileUseCaseFactory extends BaseUseCaseFactory {
 }
 
 export function makeGetUserProfileUseCase(
-  repositoryType: RepositoryType = 'prisma'
+  repositoryType: RepositoryType = 'prisma',
 ): GetUserProfileUseCase {
   const factory = new GetUserProfileUseCaseFactory()
   return factory.create(repositoryType)
 }
 
 export function makeGetUserProfileUseCaseWithRepository(
-  repository: UsersRepository
+  repository: UsersRepository,
 ): GetUserProfileUseCase {
   const factory = new GetUserProfileUseCaseFactory()
   return factory.createWithRepository(repository)

@@ -4,7 +4,7 @@ import { UsersRepository } from '@/repositories/users-repository'
 
 export class AuthenticateUseCaseFactory extends BaseUseCaseFactory {
   create(type: RepositoryType = 'prisma'): AuthenticateUseCase {
-    const usersRepository = this.createRepository(type)
+    const usersRepository = this.createUsersRepository(type)
     return new AuthenticateUseCase(usersRepository)
   }
 
@@ -14,14 +14,14 @@ export class AuthenticateUseCaseFactory extends BaseUseCaseFactory {
 }
 
 export function makeAuthenticateUseCase(
-  repositoryType: RepositoryType = 'prisma'
+  repositoryType: RepositoryType = 'prisma',
 ): AuthenticateUseCase {
   const factory = new AuthenticateUseCaseFactory()
   return factory.create(repositoryType)
 }
 
 export function makeAuthenticateUseCaseWithRepository(
-  repository: UsersRepository
+  repository: UsersRepository,
 ): AuthenticateUseCase {
   const factory = new AuthenticateUseCaseFactory()
   return factory.createWithRepository(repository)
