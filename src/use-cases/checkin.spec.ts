@@ -2,6 +2,7 @@ import { expect, describe, it, beforeEach } from 'vitest'
 import { makeCheckInUseCaseWithRepositories } from './factories/make-checkin-use-case'
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
 import { InMemoryGymRepository } from '@/repositories/in-memory/in-memory-gyms-repository'
+import { DistanceValidationError } from './errors/distance-validation-error'
 
 describe('Check In Use Case', () => {
   let inMemoryCheckInsRepository: InMemoryCheckInsRepository
@@ -203,5 +204,49 @@ describe('Check In Use Case', () => {
         userLongitude: -46.6333,
       }),
     ).rejects.toThrow('Resource not found')
+  })
+
+  it('should allow check-in when user is within 100 meters of gym', async () => {
+    const checkInUseCase = makeCheckInUseCaseWithRepositories(
+      inMemoryCheckInsRepository,
+      inMemoryGymsRepository,
+    )
+
+    const { checkIn } = await checkInUseCase.execute({
+      userId: 'user-1',
+      gymId: 'gym-1',
+      userLatitude: -23.5505,
+      userLongitude: -46.6333,
+    })
+
+    expect(checkIn.user_id).toBe('user-1')
+    expect(checkIn.gym_id).toBe('gym-1')
+  })
+
+  it('should reject check-in when user is exactly 100 meters from gym', async () => {
+    const checkInUseCase = makeCheckInUseCaseWithRepositories(
+      inMemoryCheckInsRepository,
+      inMemoryGymsRepository,
+    )
+
+    // Add a gym that's exactly 100 meters away
+    inMemoryGymsRepository.items.push({
+      id: 'gym-3',
+      title: 'Test Gym 3',
+      description: 'Test gym description 3',
+      phone: '555-123-4567',
+      latitude: -23.5505,
+      longitude: -46.6333,
+    } as any)
+
+    // Use coordinates that would be more than 100 meters away
+    await expect(
+      checkInUseCase.execute({
+        userId: 'user-1',
+        gymId: 'gym-3',
+        userLatitude: -23.5505 + 0.001, // This offset creates >100m distance
+        userLongitude: -46.6333 + 0.001,
+      }),
+    ).rejects.toBeInstanceOf(DistanceValidationError)
   })
 })
