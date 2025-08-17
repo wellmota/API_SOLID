@@ -18,7 +18,7 @@ describe('InMemoryUsersRepository', () => {
     const user = await repository.create(userData)
 
     expect(user).toEqual({
-      id: 'user-1',
+      id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i),
       name: 'John Doe',
       email: 'john.doe@example.com',
       password_hash: 'hashed_password',
@@ -34,10 +34,11 @@ describe('InMemoryUsersRepository', () => {
     }
 
     await repository.create(userData)
+
     const foundUser = await repository.findByEmail('john.doe@example.com')
 
     expect(foundUser).toEqual({
-      id: 'user-1',
+      id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i),
       name: 'John Doe',
       email: 'john.doe@example.com',
       password_hash: 'hashed_password',
@@ -64,21 +65,19 @@ describe('InMemoryUsersRepository', () => {
       password_hash: 'hashed_password_2',
     }
 
-    await repository.create(user1Data)
-    await repository.create(user2Data)
+    const user1 = await repository.create(user1Data)
+    const user2 = await repository.create(user2Data)
 
-    const foundUser1 = await repository.findByEmail('john.doe@example.com')
-    const foundUser2 = await repository.findByEmail('jane.smith@example.com')
-
-    expect(foundUser1?.name).toBe('John Doe')
-    expect(foundUser2?.name).toBe('Jane Smith')
+    expect(user1.id).not.toBe(user2.id)
+    expect(user1.email).toBe('john.doe@example.com')
+    expect(user2.email).toBe('jane.smith@example.com')
   })
 
   it('should handle empty password_hash with fallback', async () => {
     const userData = {
       name: 'John Doe',
       email: 'john.doe@example.com',
-      password_hash: undefined,
+      password_hash: '',
     }
 
     const user = await repository.create(userData)

@@ -24,10 +24,13 @@ describe('Register Integration', () => {
 
     expect(user1.email).toBe('john.doe@example.com')
     expect(user2.email).toBe('jane.smith@example.com')
-    // Note: InMemoryUsersRepository always returns 'user-1' as ID for simplicity
+    // Note: InMemoryUsersRepository now returns random UUIDs as IDs
     // In a real implementation, this would be different
-    expect(user1.id).toBe('user-1')
-    expect(user2.id).toBe('user-1')
+    expect(user1.id).toBeDefined()
+    expect(user2.id).toBeDefined()
+    expect(user1.id).not.toBe(user2.id)
+    expect(user1.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+    expect(user2.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
 
     // Verify passwords are hashed
     const isUser1PasswordCorrect = await compare('123456', user1.password_hash)

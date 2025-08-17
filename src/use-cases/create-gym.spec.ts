@@ -65,9 +65,11 @@ describe('Create Gym Use Case', () => {
       longitude: 1,
     })
 
-    expect(gym1.id).toBe('gym-1')
-    expect(gym2.id).toBe('gym-2')
+    expect(gym1.id).toBeDefined()
+    expect(gym2.id).toBeDefined()
     expect(gym1.id).not.toBe(gym2.id)
+    expect(gym1.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+    expect(gym2.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
   })
 
   it('should store gym in repository', async () => {

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
-import { CheckIn, Prisma } from '../../../generated/prisma'
+import { CheckIn } from '../../../generated/prisma'
 import { CheckInsRepository } from '../check-ins-repository'
+import { randomUUID } from 'crypto'
 
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public items: CheckIn[] = []
@@ -24,14 +25,25 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     return checkInOnSameDate
   }
 
-  async create(data: Prisma.CheckInUncheckedCreateInput): Promise<CheckIn> {
-    const checkIn = {
-      id: `check-in-${this.items.length + 1}`,
+  async findById(id: string) {
+    const checkIn = this.items.find((item) => item.id === id)
+    if (!checkIn) {
+      return null
+    }
+    return checkIn
+  }
+
+  async create(data: {
+    gym_id: string
+    user_id: string
+  }): Promise<CheckIn> {
+    const checkIn: CheckIn = {
+      id: randomUUID(),
       createdAt: new Date(),
       validatedAt: null,
-      user_id: data.user_id,
       gym_id: data.gym_id,
-    }
+      user_id: data.user_id,
+    } as any
 
     this.items.push(checkIn)
     return checkIn

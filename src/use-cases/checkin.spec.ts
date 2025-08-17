@@ -14,7 +14,7 @@ describe('Check In Use Case', () => {
 
     // Add test gyms
     inMemoryGymsRepository.items.push({
-      id: 'gym-1',
+      id: 'gym-uuid-1',
       title: 'Test Gym 1',
       description: 'Test gym description',
       phone: '123-456-7890',
@@ -23,7 +23,7 @@ describe('Check In Use Case', () => {
     } as any)
 
     inMemoryGymsRepository.items.push({
-      id: 'gym-2',
+      id: 'gym-uuid-2',
       title: 'Test Gym 2',
       description: 'Test gym description 2',
       phone: '098-765-4321',
@@ -40,14 +40,14 @@ describe('Check In Use Case', () => {
 
     const { checkIn } = await checkInUseCase.execute({
       userId: 'user-1',
-      gymId: 'gym-1',
+      gymId: 'gym-uuid-1',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
 
     expect(checkIn.id).toBeDefined()
     expect(checkIn.user_id).toBe('user-1')
-    expect(checkIn.gym_id).toBe('gym-1')
+    expect(checkIn.gym_id).toBe('gym-uuid-1')
     expect(checkIn.createdAt).toBeInstanceOf(Date)
     expect(checkIn.validatedAt).toBeNull()
   })
@@ -60,21 +60,27 @@ describe('Check In Use Case', () => {
 
     const { checkIn: checkIn1 } = await checkInUseCase.execute({
       userId: 'user-1',
-      gymId: 'gym-1',
+      gymId: 'gym-uuid-1',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
 
     const { checkIn: checkIn2 } = await checkInUseCase.execute({
       userId: 'user-2',
-      gymId: 'gym-2',
+      gymId: 'gym-uuid-2',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
 
-    expect(checkIn1.id).toBe('check-in-1')
-    expect(checkIn2.id).toBe('check-in-2')
+    expect(checkIn1.id).toBeDefined()
+    expect(checkIn2.id).toBeDefined()
     expect(checkIn1.id).not.toBe(checkIn2.id)
+    expect(checkIn1.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    )
+    expect(checkIn2.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    )
   })
 
   it('should store check-in in repository', async () => {
@@ -85,7 +91,7 @@ describe('Check In Use Case', () => {
 
     const { checkIn } = await checkInUseCase.execute({
       userId: 'user-1',
-      gymId: 'gym-1',
+      gymId: 'gym-uuid-1',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
@@ -102,22 +108,22 @@ describe('Check In Use Case', () => {
 
     const { checkIn: checkIn1 } = await checkInUseCase.execute({
       userId: 'user-1',
-      gymId: 'gym-1',
+      gymId: 'gym-uuid-1',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
 
     const { checkIn: checkIn2 } = await checkInUseCase.execute({
       userId: 'user-1',
-      gymId: 'gym-2',
+      gymId: 'gym-uuid-2',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
 
     expect(checkIn1.user_id).toBe('user-1')
     expect(checkIn2.user_id).toBe('user-1')
-    expect(checkIn1.gym_id).toBe('gym-1')
-    expect(checkIn2.gym_id).toBe('gym-2')
+    expect(checkIn1.gym_id).toBe('gym-uuid-1')
+    expect(checkIn2.gym_id).toBe('gym-uuid-2')
     expect(inMemoryCheckInsRepository.items).toHaveLength(2)
   })
 
@@ -129,20 +135,20 @@ describe('Check In Use Case', () => {
 
     const { checkIn: checkIn1 } = await checkInUseCase.execute({
       userId: 'user-1',
-      gymId: 'gym-1',
+      gymId: 'gym-uuid-1',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
 
     const { checkIn: checkIn2 } = await checkInUseCase.execute({
       userId: 'user-2',
-      gymId: 'gym-1',
+      gymId: 'gym-uuid-1',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
 
-    expect(checkIn1.gym_id).toBe('gym-1')
-    expect(checkIn2.gym_id).toBe('gym-1')
+    expect(checkIn1.gym_id).toBe('gym-uuid-1')
+    expect(checkIn2.gym_id).toBe('gym-uuid-1')
     expect(checkIn1.user_id).toBe('user-1')
     expect(checkIn2.user_id).toBe('user-2')
     expect(inMemoryCheckInsRepository.items).toHaveLength(2)
@@ -158,7 +164,7 @@ describe('Check In Use Case', () => {
 
     const { checkIn } = await checkInUseCase.execute({
       userId: 'user-1',
-      gymId: 'gym-1',
+      gymId: 'gym-uuid-1',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
@@ -181,13 +187,13 @@ describe('Check In Use Case', () => {
 
     const { checkIn } = await checkInUseCase.execute({
       userId: '',
-      gymId: 'gym-1',
+      gymId: 'gym-uuid-1',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
 
     expect(checkIn.user_id).toBe('')
-    expect(checkIn.gym_id).toBe('gym-1')
+    expect(checkIn.gym_id).toBe('gym-uuid-1')
   })
 
   it('should handle empty gym ID', async () => {
@@ -214,13 +220,13 @@ describe('Check In Use Case', () => {
 
     const { checkIn } = await checkInUseCase.execute({
       userId: 'user-1',
-      gymId: 'gym-1',
+      gymId: 'gym-uuid-1',
       userLatitude: -23.5505,
       userLongitude: -46.6333,
     })
 
     expect(checkIn.user_id).toBe('user-1')
-    expect(checkIn.gym_id).toBe('gym-1')
+    expect(checkIn.gym_id).toBe('gym-uuid-1')
   })
 
   it('should reject check-in when user is exactly 100 meters from gym', async () => {
@@ -231,7 +237,7 @@ describe('Check In Use Case', () => {
 
     // Add a gym that's exactly 100 meters away
     inMemoryGymsRepository.items.push({
-      id: 'gym-3',
+      id: 'gym-uuid-3',
       title: 'Test Gym 3',
       description: 'Test gym description 3',
       phone: '555-123-4567',
@@ -243,7 +249,7 @@ describe('Check In Use Case', () => {
     await expect(
       checkInUseCase.execute({
         userId: 'user-1',
-        gymId: 'gym-3',
+        gymId: 'gym-uuid-3',
         userLatitude: -23.5505 + 0.001, // This offset creates >100m distance
         userLongitude: -46.6333 + 0.001,
       }),

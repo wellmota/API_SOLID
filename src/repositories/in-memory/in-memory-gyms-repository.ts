@@ -1,5 +1,6 @@
 import { Gym } from '../../../generated/prisma'
 import { GymsRepository } from '../gym-repository'
+import { randomUUID } from 'crypto'
 
 export class InMemoryGymRepository implements GymsRepository {
   public items: Gym[] = []
@@ -20,7 +21,7 @@ export class InMemoryGymRepository implements GymsRepository {
     longitude: number
   }): Promise<Gym> {
     const gym: Gym = {
-      id: `gym-${this.items.length + 1}`,
+      id: randomUUID(),
       title: data.title,
       description: data.description || null,
       phone: data.phone || null,
