@@ -1,4 +1,4 @@
-import { Gym } from '../../../generated/prisma'
+import { Gym, Prisma } from '../../../generated/prisma'
 import { GymsRepository } from '../gym-repository'
 import { randomUUID } from 'crypto'
 
@@ -25,8 +25,8 @@ export class InMemoryGymRepository implements GymsRepository {
       title: data.title,
       description: data.description || null,
       phone: data.phone || null,
-      latitude: data.latitude as any,
-      longitude: data.longitude as any,
+      latitude: new Prisma.Decimal(data.latitude.toString()),
+      longitude: new Prisma.Decimal(data.longitude.toString()),
     } as any
 
     this.items.push(gym)

@@ -26,8 +26,8 @@ describe('Create Gym Use Case', () => {
     expect(gym.title).toBe('Test Gym')
     expect(gym.description).toBe('A test gym for testing')
     expect(gym.phone).toBe('123-456-7890')
-    expect(gym.latitude).toBe(-23.5505)
-    expect(gym.longitude).toBe(-46.6333)
+    expect(Number(gym.latitude)).toBe(-23.5505)
+    expect(Number(gym.longitude)).toBe(-46.6333)
   })
 
   it('should create gym with minimal required data', async () => {
@@ -44,8 +44,8 @@ describe('Create Gym Use Case', () => {
     expect(gym.title).toBe('Minimal Gym')
     expect(gym.description).toBeNull()
     expect(gym.phone).toBeNull()
-    expect(gym.latitude).toBe(0)
-    expect(gym.longitude).toBe(0)
+    expect(Number(gym.latitude)).toBe(0)
+    expect(Number(gym.longitude)).toBe(0)
   })
 
   it('should create gym with unique ID', async () => {
@@ -220,8 +220,8 @@ describe('Create Gym Use Case', () => {
       longitude: 0,
     })
 
-    expect(gym1.latitude).toBe(90)
-    expect(gym2.latitude).toBe(-90)
+    expect(Number(gym1.latitude)).toBe(90)
+    expect(Number(gym2.latitude)).toBe(-90)
   })
 
   it('should allow gym creation with boundary longitude values', async () => {
@@ -241,7 +241,7 @@ describe('Create Gym Use Case', () => {
       longitude: -180,
     })
 
-    expect(gym1.longitude).toBe(180)
-    expect(gym2.longitude).toBe(-180)
+    expect(Number(gym1.longitude)).toBe(180)
+    expect(Number(gym2.longitude)).toBe(-180)
   })
 })

@@ -18,7 +18,9 @@ describe('InMemoryUsersRepository', () => {
     const user = await repository.create(userData)
 
     expect(user).toEqual({
-      id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i),
+      id: expect.stringMatching(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+      ),
       name: 'John Doe',
       email: 'john.doe@example.com',
       password_hash: 'hashed_password',
@@ -38,7 +40,9 @@ describe('InMemoryUsersRepository', () => {
     const foundUser = await repository.findByEmail('john.doe@example.com')
 
     expect(foundUser).toEqual({
-      id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i),
+      id: expect.stringMatching(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+      ),
       name: 'John Doe',
       email: 'john.doe@example.com',
       password_hash: 'hashed_password',

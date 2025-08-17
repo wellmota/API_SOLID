@@ -29,8 +29,12 @@ describe('Register Integration', () => {
     expect(user1.id).toBeDefined()
     expect(user2.id).toBeDefined()
     expect(user1.id).not.toBe(user2.id)
-    expect(user1.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
-    expect(user2.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+    expect(user1.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    )
+    expect(user2.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    )
 
     // Verify passwords are hashed
     const isUser1PasswordCorrect = await compare('123456', user1.password_hash)
@@ -54,7 +58,7 @@ describe('Register Integration', () => {
 
     // Second registration with same email should fail
     await expect(registerUseCase.execute(userData)).rejects.toBeInstanceOf(
-      UserAlreadyExistsError
+      UserAlreadyExistsError,
     )
   })
 
