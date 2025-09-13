@@ -22,35 +22,36 @@ A GymPass-style application built with SOLID principles, featuring comprehensive
 - [x] User must not be able to register with a duplicated email
 - [x] User must not be able to check-in twice a day
 - [x] User must not be able to check-in if they are far from 100m from the gym
-- [ ] Check-in can only be validated after 20 minutes after it has been created
-- [ ] Check in can only be validated by admins
-- [ ] Register Gyms is only available for Admins
+- [x] Check-in can only be validated after 20 minutes after it has been created
+- [x] Check in can only be validated by admins
+- [x] Register Gyms is only available for Admins
 
 ## RNF's (Requisitos não-funcionais)
 
 - [x] User password must be encryted
 - [x] Data must be persist into a PostgreSQL
 - [x] All lists must be paginated with 20 items per page
-- [ ] User must be identified by a JWT (JSON Web Token)
+- [x] User must be identified by a JWT (JSON Web Token)
 
 ## Use Cases Implemented
 
 ### User Management
 
 - **Register**: User registration with email validation and duplicate prevention
-- **Authenticate**: User authentication with credentials validation
+- **Authenticate**: User authentication with JWT token generation
 - **Get User Profile**: Retrieve logged-in user information
 
 ### Academy/Gym Management
 
 - **Create Academy**: Register new academies with comprehensive validation
-- **Create Gym**: Alternative gym creation method (legacy)
+- **Create Gym**: Admin-only gym creation with role-based access control
 - **Search Academy**: Search academies by name with advanced filtering and sorting
 - **Validate Academy Distance**: Check proximity for check-in validation
 
 ### Check-in System
 
 - **Check-in**: User check-in at academies with distance and frequency validation
+- **Validate Check-in**: Admin-only check-in validation with 20-minute timer
 - **Check-in History**: Comprehensive check-in history with pagination and filtering
 - **Fetch User Check-in History**: Alternative history retrieval method with summary statistics
 
@@ -58,6 +59,12 @@ A GymPass-style application built with SOLID principles, featuring comprehensive
 
 - **Metrics**: Comprehensive analytics and statistics dashboard
 - **Distance Validation**: Proximity-based validation system with Haversine formula
+
+### Authentication & Authorization
+
+- **JWT Authentication**: Secure token-based authentication system
+- **Role-based Access Control**: Admin and user role management
+- **Auth Middleware**: Express middleware for route protection
 
 ## Use Case Features
 
@@ -95,6 +102,30 @@ A GymPass-style application built with SOLID principles, featuring comprehensive
 - Most popular gym identification
 - Flexible filtering by user, gym, and date range
 
+### Validate Check-in
+
+- 20-minute validation timer enforcement
+- Admin-only validation access
+- Duplicate validation prevention
+- Comprehensive error handling
+- Time-based validation logic
+
+### JWT Authentication
+
+- Secure token generation and validation
+- Token expiration handling
+- Bearer token extraction
+- User role verification
+- Middleware-based route protection
+
+### Role-based Access Control
+
+- Admin and User role management
+- Permission-based access control
+- Route-level authorization
+- User role validation
+- Unauthorized access prevention
+
 ## Technical Features
 
 - **SOLID Principles**: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
@@ -104,6 +135,11 @@ A GymPass-style application built with SOLID principles, featuring comprehensive
 - **Pagination**: Configurable pagination for all list endpoints
 - **Distance Calculation**: Haversine formula for accurate geographic calculations
 - **Type Safety**: Full TypeScript support with proper interfaces
+- **JWT Authentication**: Secure token-based authentication with jsonwebtoken
+- **Role-based Authorization**: Admin and user permission system
+- **Time-based Validation**: Precise timing controls for business rules
+- **Express Middleware**: Custom authentication and authorization middleware
+- **Error Handling**: Comprehensive error classes and handling system
 
 ## Project Structure
 
@@ -117,7 +153,24 @@ src/
 │   ├── in-memory/       # In-memory implementations
 │   └── prisma/          # Database implementations
 ├── http/                # HTTP layer (controllers, routes)
-└── lib/                 # Shared utilities
+├── lib/                 # Shared utilities and services
+│   ├── jwt.ts           # JWT authentication service
+│   └── auth-middleware.ts # Express authentication middleware
+└── env/                 # Environment configuration
 ```
+
+## Complete Feature Status
+
+### ✅ All Requirements Completed
+- **Functional Requirements**: 12/12 completed
+- **Business Rules**: 6/6 completed  
+- **Non-Functional Requirements**: 4/4 completed
+
+### 🎯 Key Achievements
+- **100% SOLID Compliance**: All use cases follow SOLID principles
+- **Complete Test Coverage**: Comprehensive test suites for all features
+- **Security Implementation**: JWT authentication and role-based access control
+- **Business Logic Enforcement**: All business rules properly implemented
+- **Production Ready**: Full error handling and validation
 
 ---
