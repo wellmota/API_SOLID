@@ -8,3 +8,4 @@ export { makeValidateAcademyDistanceUseCase } from './make-validate-academy-dist
 export { makeCheckinHistoryUseCase } from './make-checkin-history-use-case'
 export { makeSearchAcademyUseCase } from './make-search-academy-use-case'
 export { makeValidateCheckInUseCase } from './make-validate-checkin-use-case'
+export { makeFetchUserCheckInHistoryUseCase } from './make-fetch-user-check-in-history-use-case'

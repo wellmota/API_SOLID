@@ -40,7 +40,9 @@ describe('Prisma Check-ins Repository', () => {
     const createdCheckIn = await prismaCheckInsRepository.create(checkInData)
 
     // Then find it by id
-    const foundCheckIn = await prismaCheckInsRepository.findById(createdCheckIn.id)
+    const foundCheckIn = await prismaCheckInsRepository.findById(
+      createdCheckIn.id,
+    )
 
     expect(foundCheckIn).toBeDefined()
     expect(foundCheckIn?.id).toBe(createdCheckIn.id)
@@ -49,7 +51,8 @@ describe('Prisma Check-ins Repository', () => {
   })
 
   it('should return null when check-in is not found', async () => {
-    const foundCheckIn = await prismaCheckInsRepository.findById('non-existent-id')
+    const foundCheckIn =
+      await prismaCheckInsRepository.findById('non-existent-id')
 
     expect(foundCheckIn).toBeNull()
   })
@@ -64,7 +67,9 @@ describe('Prisma Check-ins Repository', () => {
     const createdCheckIn = await prismaCheckInsRepository.create(checkInData)
 
     // Then validate it
-    const validatedCheckIn = await prismaCheckInsRepository.validate(createdCheckIn.id)
+    const validatedCheckIn = await prismaCheckInsRepository.validate(
+      createdCheckIn.id,
+    )
 
     expect(validatedCheckIn).toBeDefined()
     expect(validatedCheckIn.id).toBe(createdCheckIn.id)
@@ -168,7 +173,7 @@ describe('Prisma Check-ins Repository', () => {
       user_id: userId,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await new Promise((resolve) => setTimeout(resolve, 10))
 
     await prismaCheckInsRepository.create({
       gym_id: 'gym-2',
@@ -176,22 +181,28 @@ describe('Prisma Check-ins Repository', () => {
     })
 
     // Test ascending order
-    const ascendingCheckIns = await prismaCheckInsRepository.findManyByUserId(userId, {
-      skip: 0,
-      take: 10,
-      orderBy: { createdAt: 'asc' },
-    })
+    const ascendingCheckIns = await prismaCheckInsRepository.findManyByUserId(
+      userId,
+      {
+        skip: 0,
+        take: 10,
+        orderBy: { createdAt: 'asc' },
+      },
+    )
 
     expect(ascendingCheckIns).toHaveLength(2)
     expect(ascendingCheckIns[0].gym_id).toBe('gym-1')
     expect(ascendingCheckIns[1].gym_id).toBe('gym-2')
 
     // Test descending order
-    const descendingCheckIns = await prismaCheckInsRepository.findManyByUserId(userId, {
-      skip: 0,
-      take: 10,
-      orderBy: { createdAt: 'desc' },
-    })
+    const descendingCheckIns = await prismaCheckInsRepository.findManyByUserId(
+      userId,
+      {
+        skip: 0,
+        take: 10,
+        orderBy: { createdAt: 'desc' },
+      },
+    )
 
     expect(descendingCheckIns).toHaveLength(2)
     expect(descendingCheckIns[0].gym_id).toBe('gym-2')

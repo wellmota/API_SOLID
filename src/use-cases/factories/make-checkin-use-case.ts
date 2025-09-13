@@ -2,7 +2,6 @@ import { CheckInUseCase } from '../checkin'
 import { BaseUseCaseFactory, RepositoryType } from './base-factory'
 import { CheckInsRepository } from '@/repositories/check-ins-repository'
 import { GymsRepository } from '@/repositories/gym-repository'
-import { InMemoryGymRepository } from '@/repositories/in-memory/in-memory-gyms-repository'
 
 export class CheckInUseCaseFactory extends BaseUseCaseFactory {
   create(type: RepositoryType = 'prisma'): CheckInUseCase {
@@ -12,7 +11,7 @@ export class CheckInUseCaseFactory extends BaseUseCaseFactory {
   }
 
   createWithRepository(repository: CheckInsRepository): CheckInUseCase {
-    const gymsRepository = new InMemoryGymRepository()
+    const gymsRepository = this.createGymsRepository('in-memory')
     return new CheckInUseCase(repository, gymsRepository)
   }
 
@@ -21,17 +20,6 @@ export class CheckInUseCaseFactory extends BaseUseCaseFactory {
     gymsRepository: GymsRepository,
   ): CheckInUseCase {
     return new CheckInUseCase(checkInsRepository, gymsRepository)
-  }
-
-  private createGymsRepository(type: RepositoryType): GymsRepository {
-    switch (type) {
-      case 'prisma':
-        throw new Error('Prisma gyms repository not implemented yet')
-      case 'in-memory':
-        return new InMemoryGymRepository()
-      default:
-        throw new Error(`Unsupported repository type: ${type}`)
-    }
   }
 }
 

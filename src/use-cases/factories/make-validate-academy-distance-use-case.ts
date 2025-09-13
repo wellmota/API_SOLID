@@ -1,7 +1,6 @@
 import { ValidateAcademyDistanceUseCase } from '../validate-academy-distance'
 import { BaseUseCaseFactory, RepositoryType } from './base-factory'
 import { GymsRepository } from '@/repositories/gym-repository'
-import { InMemoryGymRepository } from '@/repositories/in-memory/in-memory-gyms-repository'
 
 export class ValidateAcademyDistanceUseCaseFactory extends BaseUseCaseFactory {
   create(type: RepositoryType = 'prisma'): ValidateAcademyDistanceUseCase {
@@ -13,17 +12,6 @@ export class ValidateAcademyDistanceUseCaseFactory extends BaseUseCaseFactory {
     gymsRepository: GymsRepository,
   ): ValidateAcademyDistanceUseCase {
     return new ValidateAcademyDistanceUseCase(gymsRepository)
-  }
-
-  private createGymsRepository(type: RepositoryType): GymsRepository {
-    switch (type) {
-      case 'prisma':
-        throw new Error('Prisma gyms repository not implemented yet')
-      case 'in-memory':
-        return new InMemoryGymRepository()
-      default:
-        throw new Error(`Unsupported repository type: ${type}`)
-    }
   }
 }
 
