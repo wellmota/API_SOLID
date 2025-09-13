@@ -6,23 +6,43 @@ import { randomUUID } from 'crypto'
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public items: CheckIn[] = []
 
-  async findByUserIdOnDate(userId: string, date: Date) {
-    const startOfTheDay = dayjs(date).startOf('date')
-    const endOfTheDay = dayjs(date).endOf('date')
+  async findByUserIdOnDate(
+    userId: string,
+    from: Date,
+    to: Date,
+  ): Promise<CheckIn | null> {
+    const checkIn = this.items.find(
+      (item) =>
+        item.user_id === userId &&
+        item.createdAt >= from &&
+        item.createdAt < to,
+    )
+    return checkIn || null
+  }
 
-    const checkInOnSameDate = this.items.find((checkIn) => {
-      const checkInDate = dayjs(checkIn.createdAt)
-      const isOnSameDate =
-        checkInDate.isAfter(startOfTheDay) && checkInDate.isBefore(endOfTheDay)
+  async findManyByUserId(
+    userId: string,
+    options: {
+      skip: number
+      take: number
+      orderBy: { createdAt: 'desc' | 'asc' }
+    },
+  ): Promise<CheckIn[]> {
+    let userCheckIns = this.items.filter((item) => item.user_id === userId)
 
-      return checkIn.user_id === userId && isOnSameDate
-    })
-
-    if (!checkInOnSameDate) {
-      return null
+    // Sort by creation date
+    if (options.orderBy.createdAt === 'desc') {
+      userCheckIns.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    } else {
+      userCheckIns.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
     }
 
-    return checkInOnSameDate
+    // Apply pagination
+    return userCheckIns.slice(options.skip, options.skip + options.take)
+  }
+
+  async countByUserId(userId: string): Promise<number> {
+    return this.items.filter((item) => item.user_id === userId).length
   }
 
   async findById(id: string) {
@@ -33,10 +53,7 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     return checkIn
   }
 
-  async create(data: {
-    gym_id: string
-    user_id: string
-  }): Promise<CheckIn> {
+  async create(data: { gym_id: string; user_id: string }): Promise<CheckIn> {
     const checkIn: CheckIn = {
       id: randomUUID(),
       createdAt: new Date(),
