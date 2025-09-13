@@ -6,12 +6,16 @@ import { JWTService } from '@/lib/jwt'
 export class AuthenticateUseCaseFactory extends BaseUseCaseFactory {
   create(type: RepositoryType = 'prisma'): AuthenticateUseCase {
     const usersRepository = this.createUsersRepository(type)
-    const jwtService = new JWTService(process.env.JWT_SECRET || 'default-secret')
+    const jwtService = new JWTService(
+      process.env.JWT_SECRET || 'default-secret',
+    )
     return new AuthenticateUseCase(usersRepository, jwtService)
   }
 
   createWithRepository(repository: UsersRepository): AuthenticateUseCase {
-    const jwtService = new JWTService(process.env.JWT_SECRET || 'default-secret')
+    const jwtService = new JWTService(
+      process.env.JWT_SECRET || 'default-secret',
+    )
     return new AuthenticateUseCase(repository, jwtService)
   }
 

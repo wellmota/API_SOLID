@@ -61,7 +61,8 @@ export class ValidateCheckInUseCase {
     // Check if 20 minutes have passed since check-in creation
     const now = new Date()
     const checkInCreatedAt = new Date(checkIn.createdAt)
-    const timeDifferenceInMinutes = (now.getTime() - checkInCreatedAt.getTime()) / (1000 * 60)
+    const timeDifferenceInMinutes =
+      (now.getTime() - checkInCreatedAt.getTime()) / (1000 * 60)
 
     if (timeDifferenceInMinutes < 20) {
       throw new EarlyCheckInValidationError()

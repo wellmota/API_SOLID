@@ -36,7 +36,7 @@ export class AuthMiddleware {
       }
 
       const payload = this.jwtService.verifyToken(token)
-      
+
       // Verify user still exists
       const user = await this.usersRepository.findById(payload.sub)
       if (!user) {
@@ -103,7 +103,7 @@ export class AuthMiddleware {
       }
 
       const payload = this.jwtService.verifyToken(token)
-      
+
       // Verify user still exists
       const user = await this.usersRepository.findById(payload.sub)
       if (user) {
