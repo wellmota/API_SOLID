@@ -36,23 +36,56 @@ A GymPass-style application built with SOLID principles, featuring comprehensive
 ## Use Cases Implemented
 
 ### User Management
-- **Register**: User registration with email validation
-- **Authenticate**: User authentication with credentials
+- **Register**: User registration with email validation and duplicate prevention
+- **Authenticate**: User authentication with credentials validation
 - **Get User Profile**: Retrieve logged-in user information
 
 ### Academy/Gym Management
 - **Create Academy**: Register new academies with comprehensive validation
-- **Search Academy**: Search academies by name with advanced filtering
+- **Create Gym**: Alternative gym creation method (legacy)
+- **Search Academy**: Search academies by name with advanced filtering and sorting
 - **Validate Academy Distance**: Check proximity for check-in validation
 
 ### Check-in System
-- **Check-in**: User check-in at academies with distance validation
-- **Check-in History**: Retrieve user check-in history with pagination
-- **Fetch User Check-in History**: Alternative history retrieval method
+- **Check-in**: User check-in at academies with distance and frequency validation
+- **Check-in History**: Comprehensive check-in history with pagination and filtering
+- **Fetch User Check-in History**: Alternative history retrieval method with summary statistics
 
 ### Analytics & Metrics
-- **Metrics**: Comprehensive analytics and statistics
-- **Distance Validation**: Proximity-based validation system
+- **Metrics**: Comprehensive analytics and statistics dashboard
+- **Distance Validation**: Proximity-based validation system with Haversine formula
+
+## Use Case Features
+
+### Search Academy
+- Case-insensitive search in titles and descriptions
+- Pagination with configurable page size (1-100 items)
+- Multiple sorting options: name, distance, createdAt
+- Distance filtering with user coordinates
+- Advanced filtering and validation
+
+### Create Academy
+- Comprehensive input validation (title, description, phone, coordinates)
+- Email and URL format validation
+- Opening hours format validation
+- Facilities array validation
+- Duplicate location prevention
+
+### Check-in History
+- Pagination support with configurable limits
+- Date range filtering
+- Gym-specific filtering
+- Optional gym details inclusion
+- Summary statistics (daily, weekly, monthly counts)
+- Most frequent gym tracking
+
+### Metrics
+- Total counts (check-ins, users, gyms)
+- Check-ins by date and gym
+- Average check-ins per user
+- Most active user identification
+- Most popular gym identification
+- Flexible filtering by user, gym, and date range
 
 ## Technical Features
 
