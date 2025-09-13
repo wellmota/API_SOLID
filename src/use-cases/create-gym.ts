@@ -1,5 +1,7 @@
 import { Gym } from '@prisma/client'
 import { GymsRepository } from '@/repositories/gym-repository'
+import { UsersRepository } from '@/repositories/users-repository'
+import { UnauthorizedError } from './errors/unauthorized-error'
 
 interface CreateGymUseCaseRequest {
   title: string
@@ -7,6 +9,7 @@ interface CreateGymUseCaseRequest {
   phone: string | null
   latitude: number
   longitude: number
+  adminUserId: string
 }
 
 interface CreateGymUseCaseResponse {
@@ -14,7 +17,10 @@ interface CreateGymUseCaseResponse {
 }
 
 export class CreateGymUseCase {
-  constructor(private gymsRepository: GymsRepository) {}
+  constructor(
+    private gymsRepository: GymsRepository,
+    private usersRepository: UsersRepository,
+  ) {}
 
   async execute({
     title,
@@ -22,7 +28,23 @@ export class CreateGymUseCase {
     phone,
     latitude,
     longitude,
+    adminUserId,
   }: CreateGymUseCaseRequest): Promise<CreateGymUseCaseResponse> {
+    // Validate admin user
+    if (!adminUserId || adminUserId.trim() === '') {
+      throw new Error('Admin user ID is required')
+    }
+
+    const adminUser = await this.usersRepository.findById(adminUserId)
+
+    if (!adminUser) {
+      throw new Error('Admin user not found')
+    }
+
+    // Check if user is admin
+    if (!this.isAdmin(adminUser)) {
+      throw new UnauthorizedError()
+    }
     // Validate required fields
     if (!title.trim()) {
       throw new Error('Title is required')
@@ -53,5 +75,11 @@ export class CreateGymUseCase {
     return {
       gym,
     }
+  }
+
+  private isAdmin(user: any): boolean {
+    // This would need to be implemented based on your user model
+    // For now, we'll assume there's a role field or isAdmin field
+    return user.role === 'ADMIN' || user.isAdmin === true
   }
 }

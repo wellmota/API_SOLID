@@ -28,7 +28,7 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
       orderBy: { createdAt: 'desc' | 'asc' }
     },
   ): Promise<CheckIn[]> {
-    let userCheckIns = this.items.filter((item) => item.user_id === userId)
+    const userCheckIns = this.items.filter((item) => item.user_id === userId)
 
     // Sort by creation date
     if (options.orderBy.createdAt === 'desc') {
@@ -64,5 +64,22 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
 
     this.items.push(checkIn)
     return checkIn
+  }
+
+  async validate(id: string): Promise<CheckIn> {
+    const checkInIndex = this.items.findIndex((item) => item.id === id)
+
+    if (checkInIndex === -1) {
+      throw new Error('Check-in not found')
+    }
+
+    const checkIn = this.items[checkInIndex]
+    const validatedCheckIn = {
+      ...checkIn,
+      validatedAt: new Date(),
+    }
+
+    this.items[checkInIndex] = validatedCheckIn
+    return validatedCheckIn
   }
 }

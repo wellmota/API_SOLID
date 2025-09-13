@@ -6,6 +6,7 @@ export interface CheckInsRepository {
     gym_id: string
     user_id: string
   }): Promise<CheckIn>
+  validate(id: string): Promise<CheckIn>
   findByUserIdOnDate(
     userId: string,
     from: Date,
