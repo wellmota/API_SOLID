@@ -87,7 +87,10 @@ export class SearchAcademyUseCase {
     }
 
     // Validate that distance sorting requires coordinates
-    if (sortBy === 'distance' && (userLatitude === undefined || userLongitude === undefined)) {
+    if (
+      sortBy === 'distance' &&
+      (userLatitude === undefined || userLongitude === undefined)
+    ) {
       throw new Error('Distance sorting requires user coordinates')
     }
 
@@ -98,7 +101,10 @@ export class SearchAcademyUseCase {
     const allAcademies = await this.getAllAcademies()
 
     // Filter academies by search query
-    const filteredAcademies = this.filterAcademiesByName(allAcademies, cleanQuery)
+    const filteredAcademies = this.filterAcademiesByName(
+      allAcademies,
+      cleanQuery,
+    )
 
     // Filter by distance if coordinates and max distance are provided
     const distanceFilteredAcademies = this.filterAcademiesByDistance(
@@ -155,7 +161,7 @@ export class SearchAcademyUseCase {
     return academies.filter((academy) => {
       const title = academy.title.toLowerCase()
       const description = academy.description?.toLowerCase() || ''
-      
+
       return title.includes(query) || description.includes(query)
     })
   }
@@ -166,7 +172,11 @@ export class SearchAcademyUseCase {
     userLongitude?: number,
     maxDistance?: number,
   ): Gym[] {
-    if (userLatitude === undefined || userLongitude === undefined || maxDistance === undefined) {
+    if (
+      userLatitude === undefined ||
+      userLongitude === undefined ||
+      maxDistance === undefined
+    ) {
       return academies
     }
 
@@ -196,7 +206,15 @@ export class SearchAcademyUseCase {
     distance?: number
   }> {
     return academies.map((academy) => {
-      const result = {
+      const result: {
+        id: string
+        title: string
+        description: string | null
+        phone: string | null
+        latitude: number
+        longitude: number
+        distance?: number
+      } = {
         id: academy.id,
         title: academy.title,
         description: academy.description,
@@ -206,14 +224,15 @@ export class SearchAcademyUseCase {
       }
 
       if (userLatitude !== undefined && userLongitude !== undefined) {
-        result.distance = Math.round(
-          this.calculateDistance(
-            userLatitude,
-            userLongitude,
-            Number(academy.latitude),
-            Number(academy.longitude),
-          ) * 100
-        ) / 100 // Round to 2 decimal places
+        result.distance =
+          Math.round(
+            this.calculateDistance(
+              userLatitude,
+              userLongitude,
+              Number(academy.latitude),
+              Number(academy.longitude),
+            ) * 100,
+          ) / 100 // Round to 2 decimal places
       }
 
       return result
