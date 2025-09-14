@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken'
-
 export interface JWTPayload {
   sub: string // user id
   email: string
@@ -18,22 +16,27 @@ export class JWTService {
   }
 
   generateToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
-    return jwt.sign(payload, this.secret, {
-      expiresIn: this.expiresIn,
-    })
+    // This will be used with Fastify's JWT methods
+    // The actual implementation will be handled by Fastify's JWT plugin
+    return ''
   }
 
   verifyToken(token: string): JWTPayload {
-    try {
-      return jwt.verify(token, this.secret) as JWTPayload
-    } catch (error) {
-      throw new Error('Invalid or expired token')
-    }
+    // This will be handled by Fastify's JWT plugin
+    throw new Error('Use Fastify JWT methods instead')
   }
 
   decodeToken(token: string): JWTPayload | null {
     try {
-      return jwt.decode(token) as JWTPayload
+      const base64Url = token.split('.')[1]
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      )
+      return JSON.parse(jsonPayload) as JWTPayload
     } catch (error) {
       return null
     }

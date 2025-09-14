@@ -1,5 +1,4 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { JWTService } from './jwt'
 import { makeGetUserProfileUseCase } from '@/use-cases/factories'
 
 export interface AuthenticatedRequest extends FastifyRequest {
@@ -12,43 +11,35 @@ export interface AuthenticatedRequest extends FastifyRequest {
 
 export async function authenticate(
   request: AuthenticatedRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
   try {
-    const authHeader = request.headers.authorization
-    const token = authHeader?.replace('Bearer ', '')
-
-    if (!token) {
-      return reply.status(401).send({ error: 'Token not provided' })
-    }
-
-    const jwtService = new JWTService()
+    // Use Fastify's JWT verification
+    await request.jwtVerify()
     
-    if (jwtService.isTokenExpired(token)) {
-      return reply.status(401).send({ error: 'Token expired' })
-    }
-
-    const payload = jwtService.verifyToken(token)
-
-    // Verify user still exists
+    // Get user data from JWT payload
+    const payload = request.user as any
+    
+    // Verify user still exists in database
     const getUserProfileUseCase = makeGetUserProfileUseCase('prisma')
     const { user } = await getUserProfileUseCase.execute({
       userId: payload.sub,
     })
 
+    // Set user data on request
     request.user = {
       sub: payload.sub,
       email: payload.email,
       role: payload.role,
     }
   } catch (error) {
-    return reply.status(401).send({ error: 'Invalid token' })
+    return reply.status(401).send({ error: 'Invalid or expired token' })
   }
 }
 
 export async function requireAdmin(
   request: AuthenticatedRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
   try {
     // First authenticate the user

@@ -19,6 +19,7 @@ model User{
   name String
   email String @unique
   password_hash String @default("")
+  role String @default("USER")
   createdAt DateTime @default(now())
   checkIns CheckIn[]
 

@@ -3,16 +3,13 @@ import { makeGetUserProfileUseCase } from '@/use-cases/factories'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { authenticate, AuthenticatedRequest } from '@/lib/fastify-auth'
 
-export async function profile(
-  request: FastifyRequest,
-  reply: FastifyReply
-) {
+export async function profile(request: FastifyRequest, reply: FastifyReply) {
   try {
     // Authenticate the user first
     await authenticate(request as AuthenticatedRequest, reply)
-    
+
     const getUserProfileUseCase = makeGetUserProfileUseCase('prisma')
-    
+
     const { user } = await getUserProfileUseCase.execute({
       userId: (request as AuthenticatedRequest).user!.sub,
     })

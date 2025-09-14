@@ -5,7 +5,7 @@ import z from 'zod'
 
 export async function authenticate(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
   const authenticateBodySchema = z.object({
     email: z.string().email(),
@@ -21,12 +21,20 @@ export async function authenticate(
       password,
     })
 
+    // Generate JWT token using Fastify's JWT plugin
+    const token = await reply.jwtSign({
+      sub: user.id,
+      email: user.email,
+      role: user.role || 'USER',
+    })
+
     return reply.status(200).send({
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
       },
+      token,
     })
   } catch (err) {
     if (err instanceof InvalidCredentialsError) {

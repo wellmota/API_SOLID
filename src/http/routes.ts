@@ -11,5 +11,5 @@ export async function appRoutes(app:FastifyInstance){
   /**
    * Authenticated
    */
-  app.get('/me', profile)
+  app.get('/me', profile) 
 }

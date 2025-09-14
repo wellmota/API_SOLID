@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { CheckIn } from '../../../generated/prisma'
 import { CheckInsRepository } from '../check-ins-repository'
 import { randomUUID } from 'crypto'
@@ -60,7 +59,7 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
       validatedAt: null,
       gym_id: data.gym_id,
       user_id: data.user_id,
-    } as any
+    }
 
     this.items.push(checkIn)
     return checkIn
