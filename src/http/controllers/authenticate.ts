@@ -15,7 +15,7 @@ export async function authenticate(
 
   try {
     const authenticateUseCase = makeAuthenticateUseCase('prisma')
-    
+
     const { user } = await authenticateUseCase.execute({
       email,
       password,

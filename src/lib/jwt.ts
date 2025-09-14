@@ -34,7 +34,7 @@ export class JWTService {
         atob(base64)
           .split('')
           .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
+          .join(''),
       )
       return JSON.parse(jsonPayload) as JWTPayload
     } catch (error) {

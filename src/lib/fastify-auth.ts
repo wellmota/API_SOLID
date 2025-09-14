@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { makeGetUserProfileUseCase } from '@/use-cases/factories'
 
 export interface AuthenticatedRequest extends FastifyRequest {
-  user?: {
+  user: {
     sub: string
     email: string
     role: string
@@ -17,20 +17,18 @@ export async function authenticate(
     // Use Fastify's JWT verification
     await request.jwtVerify()
     
-    // Get user data from JWT payload
-    const payload = request.user as any
-    
-    // Verify user still exists in database
+    // After jwtVerify(), Fastify sets request.user with the JWT payload
+    // We need to verify the user still exists in database
     const getUserProfileUseCase = makeGetUserProfileUseCase('prisma')
     const { user } = await getUserProfileUseCase.execute({
-      userId: payload.sub,
+      userId: request.user.sub,
     })
 
-    // Set user data on request
+    // Update request.user with fresh data from database
     request.user = {
-      sub: payload.sub,
-      email: payload.email,
-      role: payload.role,
+      sub: user.id,
+      email: user.email,
+      role: user.role,
     }
   } catch (error) {
     return reply.status(401).send({ error: 'Invalid or expired token' })

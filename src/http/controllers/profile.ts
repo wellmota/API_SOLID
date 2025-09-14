@@ -1,17 +1,17 @@
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error'
 import { makeGetUserProfileUseCase } from '@/use-cases/factories'
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { authenticate, AuthenticatedRequest } from '@/lib/fastify-auth'
+import { AuthenticatedRequest } from '@/lib/fastify-auth'
 
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
   try {
-    // Authenticate the user first
-    await authenticate(request as AuthenticatedRequest, reply)
-
+    // Authentication is handled by route middleware
+    const authenticatedRequest = request as AuthenticatedRequest
+    
     const getUserProfileUseCase = makeGetUserProfileUseCase('prisma')
 
     const { user } = await getUserProfileUseCase.execute({
-      userId: (request as AuthenticatedRequest).user!.sub,
+      userId: authenticatedRequest.user!.sub,
     })
 
     return reply.status(200).send({
